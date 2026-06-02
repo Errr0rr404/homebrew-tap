@@ -1,9 +1,14 @@
 class CliConnect < Formula
-  desc "Control your Mac or Windows terminal from your iPhone"
+  desc "Control your Mac, Windows, or Linux terminal from your iPhone or Android phone"
   homepage "https://github.com/Errr0rr404/cli-connect"
-  url "https://registry.npmjs.org/@worldofz/cli-connect/-/cli-connect-0.1.0.tgz"
-  version "0.1.0"
-  sha256 "08c573df9f02fea3b087d41b93982666424265c305e3027367fd57dadbc157d1"
+  # Homebrew installs the prebuilt binary straight from the published npm
+  # tarball. After each `npm publish`, bump url + version here and set sha256 to
+  # the SHA-256 of the registry tarball:
+  #   curl -fsSL <url> | shasum -a 256
+  # then mirror this file into the Errr0rr404/homebrew-tap repo.
+  url "https://registry.npmjs.org/@worldofz/cli-connect/-/cli-connect-0.1.4.tgz"
+  version "0.1.4"
+  sha256 "da8961e8a7602082bc8a8a6011b6c8e2b3c7914e54a3f91f512b75a0d92c89db"
   license "MIT"
 
   def install
@@ -11,8 +16,8 @@ class CliConnect < Formula
       arch = Hardware::CPU.arm? ? "arm64" : "x64"
       bin.install "bin/darwin-#{arch}/cli-connect"
     elsif OS.linux?
-      odie "Linux ARM not supported yet" unless Hardware::CPU.intel?
-      bin.install "bin/linux-x64/cli-connect"
+      arch = Hardware::CPU.arm? ? "arm64" : "x64"
+      bin.install "bin/linux-#{arch}/cli-connect"
     else
       odie "Unsupported OS"
     end
@@ -35,6 +40,6 @@ class CliConnect < Formula
   end
 
   test do
-    assert_match "cli-connect", shell_output("#{bin}/cli-connect --help 2>&1", 2)
+    assert_match "cli-connect", shell_output("#{bin}/cli-connect --help 2>&1")
   end
 end
